@@ -1,23 +1,47 @@
-import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = [
-  { id: 0, name: "Vedang", number: 7820967372 },
-  { id: 1, name: "Vedang", number: 8999785521 },
+  { id: 0, name: "Vedang", number: "7820967372" },
+  { id: 1, name: "Shilpa", number: "8999785521" },
+  { id: 2, name: "Mahesh", number: "7020049945" },
 ];
 
-export const contactSLice = createSlice({
-  name: "contact",
-  initialState,
+const contactReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "ADD_CONTACT":
+      state = [...state, action.payload];
+      return state;
 
-  reducers: {
-    addContact: (state = initialState, action) => {
-      switch (action.type) {
-        default:
-          return state;
-      }
-    },
-  },
-});
+    case "DELETE_CONTACT":
+      const contactFilter = state.filter((contact) =>
+        contact.id === action.payload ? null : contact
+      );
+      state = contactFilter;
+      return state;
 
-export const addContact = contactSLice.actions;
-export default contactSLice.reducer;
+    default:
+      return state;
+  }
+};
+
+// export const contactSLice = createSlice({
+//   name: "contact",
+//   initialState,
+
+//   reducers: {
+//     contactReducer: (state = initialState, action) => {
+//       switch (action.type) {
+//         case "ADD_CONTACT":
+//           state = [...state, action.payload];
+//           return state;
+
+//         default:
+//           return state;
+//       }
+//     },
+//   },
+// });
+
+// export const contactReducer = contactSLice.actions;
+
+export const contactState = (state) => state;
+export default contactReducer;
