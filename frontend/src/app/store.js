@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import addContact from "../reducers/contactSlice";
-import { composeWithDevTools } from "redux-devtools-extension";
+import contactReducer from "../reducers/contactSlice";
 
 export const store = configureStore({
   reducer: {
-    contact: addContact,
+    contactReducer,
   },
-  devTools: composeWithDevTools(),
 });
