@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { contactState } from "./reducers/contactSlice";
+import axios from "axios";
 
 const Title = styled.h1`
   font-size: 1.5em;
@@ -98,7 +99,7 @@ function App() {
   const contactArr = contacts.contactReducer;
   const [dataArray, setDataArray] = useState(contactArr);
 
-  const addContact = (e) => {
+  const addContact = async (e) => {
     e.preventDefault();
     if (!name) setNameError(true);
     if (!phone) setPhoneError(true);
@@ -142,17 +143,44 @@ function App() {
       });
 
       toast.success("Contact Saved");
+
+      const addContactResult = await axios.post(
+        "http://localhost:5000/add_contact",
+        {
+          id:
+            contactArr.length > 0
+              ? contactArr[contactArr.length - 1].id + 1
+              : 0,
+          name: name,
+          number: phone,
+        }
+      );
+
+      console.log(addContactResult);
+
       // console.log(contactData);
     }
 
     console.log(contactState);
   };
 
-  const deleteContact = (id) => {
+  const deleteContact = async (id) => {
     dispatch({
       type: "DELETE_CONTACT",
       payload: id,
     });
+
+    console.log(id);
+    const deleteContactResult = await axios.delete(
+      "http://localhost:5000/delete_contact",
+      {
+        data: {
+          id: id,
+        },
+      }
+    );
+
+    console.log(deleteContactResult);
   };
 
   useEffect(() => {
@@ -214,8 +242,8 @@ function App() {
               <th>Delete</th>
             </tr>
           </thead>
-          {dataArray.map((friend, index) => (
-            <>
+          <tbody>
+            {dataArray.map((friend, index) => (
               <tr key={index}>
                 <td>{friend.id}</td>
                 <td>{friend.name}</td>
@@ -227,8 +255,8 @@ function App() {
                   </DeleteContact>
                 </td>
               </tr>
-            </>
-          ))}
+            ))}
+          </tbody>
         </table>
       ) : (
         <Title>Contact List Is Empty</Title>
